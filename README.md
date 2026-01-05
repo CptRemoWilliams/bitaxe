@@ -1,4 +1,4 @@
-# bitaxe
+# Quad Miner Monitor 
 BitAxe Monitor
 Step 1: Download both files (monitor.html and wallpaper.gif).
 Add the favicon.ico file if you want a browser Bitcoin Icon on your tab.
