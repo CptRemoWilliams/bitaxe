@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fallout 4 CRT Display - Quad Miner Monitor</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            background-image: url('wallpaper.gif');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;
+            background-attachment: fixed;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            font-family: monospace;
+            touch-action: manipulation; /* Improves touch responsiveness */
+        }
+
+        .panel {
+            position: relative;
+            width: 70vw;
+            max-width: 1920px;
+            height: 85vh;
+            max-height: 1080px;
+            background: linear-gradient(to bottom, #4a4a4a, #2a2a2a);
+            border: 10px solid #3c3c3c;
+            border-radius: 20px;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .widget-container {
+            width: 100%;
+            min-height: 60px;
+            padding: 8px 20px;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 4;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-sizing: border-box;
+        }
+
+        .livecoinwatch-widget-5 {
+            width: 100% !important;
+            max-width: none !important;
+        }
+
+        .panel::before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: 10px;
+            height: 10px;
+            background: #666;
+            border-radius: 50%;
+            box-shadow:
+                0 0 5px rgba(0,0,0,0.5),
+                calc(100% - 20px) 0 0 #666,
+                0 calc(100% - 20px) 0 #666,
+                calc(100% - 20px) calc(100% - 20px) 0 #666;
+        }
+
+        .crt-screen {
+            position: relative;
+            flex: 1;
+            width: 100%;
+            background-color: #000;
+            overflow: hidden;
+            border-radius: 5px;
+            animation: flicker 0.1s infinite alternate;
+            display: flex;
+            flex-direction: column;
+            box-sizing: border-box;
+        }
+
+        .quad-container {
+            display: flex;
+            flex: 1;
+            position: relative;
+        }
+
+        .column {
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            min-width: 150px;
+        }
+
+        .left-col { flex: 0 0 50%; }
+        .right-col { flex: 1 1 0%; }
+
+        .pane {
+            position: relative;
+            overflow: hidden;
+            min-height: 100px;
+            box-sizing: border-box;
+            border: 3px solid #2a4178;
+            border-radius: 4px;
+        }
+
+        .top-row { flex: 0 0 50%; }
+        .bottom-row { flex: 1 1 0%; }
+
+        .h-splitter {
+            height: 12px;
+            background: linear-gradient(to bottom, #3c3c3c, #2a2a2a);
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.6), 0 1px 2px rgba(0,0,0,0.8);
+            cursor: ns-resize;
+            position: relative;
+            z-index: 10;
+            flex-shrink: 0;
+            touch-action: none; /* Prevents scrolling interference during drag */
+        }
+
+        .v-splitter {
+            width: 12px;
+            background: linear-gradient(to right, #3c3c3c, #2a2a2a);
+            box-shadow: inset 2px 0 4px rgba(0,0,0,0.6), 1px 0 2px rgba(0,0,0,0.8);
+            cursor: ew-resize;
+            position: relative;
+            z-index: 10;
+            flex-shrink: 0;
+            touch-action: none;
+        }
+
+        .v-splitter::before {
+            content: '';
+            position: absolute;
+            top: -30px;
+            left: -30px;
+            width: 72px;
+            height: calc(100% + 60px);
+            cursor: ew-resize;
+        }
+
+        .cross-handle {
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, #555 0%, #333 50%, #222 100%);
+            border-radius: 50%;
+            box-shadow: 
+                inset 0 2px 4px rgba(255,255,255,0.2),
+                inset 0 -2px 4px rgba(0,0,0,0.8),
+                0 1px 3px rgba(0,0,0,0.6);
+            cursor: move;
+            z-index: 20;
+            pointer-events: auto;
+            touch-action: none;
+        }
+
+        .cross-handle::before {
+            content: '';
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            width: 6px;
+            height: 6px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 50%;
+        }
+
+        .h-splitter::after, .v-splitter::after {
+            content: '';
+            position: absolute;
+            background: #666;
+            box-shadow: 0 0 8px #0f0;
+            border-radius: 2px;
+        }
+
+        .h-splitter::after {
+            width: 60px;
+            height: 4px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .v-splitter::after {
+            width: 4px;
+            height: 60px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .crt-screen::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: repeating-linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.2) 1px, transparent 2px);
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        .crt-screen::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            box-shadow: inset 0 0 50px rgba(0,0,0,0.3);
+            pointer-events: none;
+            z-index: 6;
+            border-radius: 50px;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+
+        @keyframes flicker {
+            0% { opacity: 0.98; }
+            100% { opacity: 1; }
+        }
+
+        .miner-label {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.6);
+            color: #0f0;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 14px;
+            z-index: 4;
+            pointer-events: none;
+            text-shadow: 0 0 5px #0f0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="panel">
+        <!-- Crypto ticker -->
+        <div class="widget-container">
+            <script defer src="https://www.livecoinwatch.com/static/lcw-widget.js"></script>
+            <div class="livecoinwatch-widget-5"
+                lcw-base="USD"
+                lcw-color-tx="#999999"
+                lcw-marquee-1="coins"
+                lcw-marquee-2="movers"
+                lcw-marquee-items="10">
+            </div>
+        </div>
+
+        <!-- CRT Screen - 4 panes -->
+        <div class="crt-screen">
+            <div class="quad-container">
+                <!-- Left Column -->
+                <div class="column left-col">
+                    <div class="pane top-row">
+                        <div class="miner-label">Bitaxe #1 - 192.168.162.250</div>
+                        <iframe src="http://192.168.162.250"
+                            sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-top-navigation">
+                        </iframe>
+                    </div>
+                    <div class="h-splitter"></div>
+                    <div class="pane bottom-row">
+                        <div class="miner-label">Bitaxe #2 - 192.168.162.250</div>
+                        <iframe src="http://192.168.162.250"
+                            loading="eager"></iframe>
+                    </div>
+                </div>
+
+                <!-- Vertical Splitter -->
+                <div class="v-splitter" id="v-splitter">
+                    <div class="cross-handle" id="cross-handle"></div>
+                </div>
+
+                <!-- Right Column -->
+                <div class="column right-col">
+                    <div class="pane top-row">
+                        <div class="miner-label">Bitaxe #3 - 192.168.162.250</div>
+                        <iframe src="http://192.168.162.250"></iframe>
+                    </div>
+                    <div class="h-splitter"></div>
+                    <div class="pane bottom-row">
+                        <div class="miner-label">Bitaxe #4 - 192.168.162.250</div>
+                        <iframe src="http://192.168.162.250"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const quadContainer = document.querySelector('.quad-container');
+        const leftCol = document.querySelector('.left-col');
+        const vSplitter = document.getElementById('v-splitter');
+        const crossHandle = document.getElementById('cross-handle');
+
+        let isDragging = false;
+        let dragType = null;
+        let dragOverlay = null;
+
+        function createOverlay(cursor) {
+            const overlay = document.createElement('div');
+            overlay.style.position = 'fixed';
+            overlay.style.top = '0';
+            overlay.style.left = '0';
+            overlay.style.width = '100vw';
+            overlay.style.height = '100vh';
+            overlay.style.cursor = cursor;
+            overlay.style.zIndex = '9999';
+            overlay.style.background = 'transparent';
+            overlay.style.userSelect = 'none';
+            overlay.style.touchAction = 'none';
+            return overlay;
+        }
+
+        function getClientPos(e) {
+            // Unified position for mouse or single touch
+            if (e.touches && e.touches.length > 0) {
+                return { clientX: e.touches[0].clientX, clientY: e.touches[0].clientY };
+            }
+            return { clientX: e.clientX, clientY: e.clientY };
+        }
+
+        function startDrag(type, cursor) {
+            return function(e) {
+                if (e.type.startsWith('touch')) e.preventDefault(); // Prevent scrolling
+                isDragging = true;
+                dragType = type;
+                document.body.style.cursor = cursor;
+                dragOverlay = createOverlay(cursor);
+                document.body.appendChild(dragOverlay);
+                e.stopPropagation();
+            };
+        }
+
+        function onMove(e) {
+            if (!isDragging) return;
+            if (e.type.startsWith('touch')) e.preventDefault();
+
+            const pos = getClientPos(e);
+            const rect = quadContainer.getBoundingClientRect();
+            const thickness = 12;
+
+            if (dragType === 'h' || dragType === 'cross') {
+                let newTopHeight = pos.clientY - rect.top;
+                const availableHeight = rect.height - thickness;
+                newTopHeight = Math.max(100, Math.min(newTopHeight, availableHeight - 100));
+
+                document.querySelectorAll('.top-row').forEach(pane => {
+                    pane.style.flex = `0 0 ${newTopHeight}px`;
+                });
+            }
+
+            if (dragType === 'v' || dragType === 'cross') {
+                let newLeftWidth = pos.clientX - rect.left;
+                const availableWidth = rect.width - thickness;
+                newLeftWidth = Math.max(150, Math.min(newLeftWidth, availableWidth - 150));
+
+                leftCol.style.flex = `0 0 ${newLeftWidth}px`;
+            }
+        }
+
+        function stopDragging(e) {
+            if (isDragging) {
+                isDragging = false;
+                dragType = null;
+                document.body.style.cursor = 'default';
+                if (dragOverlay && dragOverlay.parentElement) {
+                    dragOverlay.parentElement.removeChild(dragOverlay);
+                }
+                dragOverlay = null;
+            }
+        }
+
+        // Mouse events
+        document.querySelectorAll('.h-splitter').forEach(splitter => {
+            splitter.addEventListener('mousedown', startDrag('h', 'ns-resize'));
+        });
+        vSplitter.addEventListener('mousedown', startDrag('v', 'ew-resize'));
+        crossHandle.addEventListener('mousedown', startDrag('cross', 'move'));
+        document.addEventListener('mousemove', onMove);
+        document.addEventListener('mouseup', stopDragging);
+        document.addEventListener('mouseleave', stopDragging);
+
+        // Touch events (for Pixel Fold / mobile)
+        document.querySelectorAll('.h-splitter').forEach(splitter => {
+            splitter.addEventListener('touchstart', startDrag('h', 'ns-resize'), { passive: false });
+        });
+        vSplitter.addEventListener('touchstart', startDrag('v', 'ew-resize'), { passive: false });
+        crossHandle.addEventListener('touchstart', startDrag('cross', 'move'), { passive: false });
+        document.addEventListener('touchmove', onMove, { passive: false });
+        document.addEventListener('touchend', stopDragging);
+    </script>
+</body>
+</html>
