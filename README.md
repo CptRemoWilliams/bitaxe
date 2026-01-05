@@ -1,6 +1,6 @@
 # bitaxe
 BitAxe Monitor
-Step 1: Download both files (monitor.html and wallpaper.gif).
+Step 1: Download both files (monitor.html and wallpaper.gif) or the entire .zip file of everything. 
 Add the favicon.ico file if you want a browser Bitcoin Icon on your tab.
 Step 2: Place all files in the same folder together.
 Step 3: Edit the monitor.html file, look specifically for the ip addresses (near the bottom section of the code) that say 192.168.162.250 and modify each of them to specifically point to each of your Bitaxe ip addresses. 
