@@ -115,7 +115,7 @@
         }
 
         .version {
-            font-size: 14px; /* Slightly smaller for subtlety */
+            font-size: 14px;
         }
 
         .title-bar {
@@ -173,7 +173,7 @@
             overflow: hidden;
             min-height: 100px;
             box-sizing: border-box;
-            border: 3px solid #2a4178;
+            border: 2px solid #2a4178;
             border-radius: 4px;
         }
 
@@ -329,6 +329,23 @@
             z-index: 4;
             pointer-events: none;
             text-shadow: 0 0 5px #0f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #f00;
+            box-shadow: 0 0 8px #f00;
+            transition: background 0.5s ease, box-shadow 0.5s ease;
+        }
+
+        .status-dot.online {
+            background: #0f0;
+            box-shadow: 0 0 10px #0f0, 0 0 20px #0f0;
         }
     </style>
 </head>
@@ -350,25 +367,30 @@
         <!-- CRT Screen - 4 panes -->
         <div class="crt-screen">
             <div class="top-bar">
-                <div class="clock" id="clock">00:00:00</div>
+                <div class="clock" id="clock">00:00:00 AM</div>
                 <div class="title-bar">Quad Miner Monitor</div>
-                <div class="version">v1.0</div>
+                <div class="version">v1.3</div>
             </div>
 
             <div class="quad-container">
                 <!-- Left Column -->
                 <div class="column left-col">
                     <div class="pane top-row">
-                        <div class="miner-label">Bitaxe #1 - 192.168.162.250</div>
-                        <iframe src="http://192.168.162.250"
+                        <div class="miner-label">
+                            <div class="status-dot" id="status1"></div>
+                            Bitaxe #1 - 192.168.162.250
+                        </div>
+                        <iframe src="http://192.168.162.250" id="iframe1"
                             sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-top-navigation">
                         </iframe>
                     </div>
                     <div class="h-splitter"></div>
                     <div class="pane bottom-row">
-                        <div class="miner-label">Bitaxe #2 - 192.168.162.250</div>
-                        <iframe src="http://192.168.162.250"
-                            loading="eager"></iframe>
+                        <div class="miner-label">
+                            <div class="status-dot" id="status2"></div>
+                            Bitaxe #2 - 192.168.162.250
+                        </div>
+                        <iframe src="http://192.168.162.250" id="iframe2"></iframe>
                     </div>
                 </div>
 
@@ -380,13 +402,19 @@
                 <!-- Right Column -->
                 <div class="column right-col">
                     <div class="pane top-row">
-                        <div class="miner-label">Bitaxe #3 - 192.168.162.250</div>
-                        <iframe src="http://192.168.162.250"></iframe>
+                        <div class="miner-label">
+                            <div class="status-dot" id="status3"></div>
+                            Bitaxe #3 - 192.168.162.250
+                        </div>
+                        <iframe src="http://192.168.162.250" id="iframe3"></iframe>
                     </div>
                     <div class="h-splitter"></div>
                     <div class="pane bottom-row">
-                        <div class="miner-label">Bitaxe #4 - 192.168.162.250</div>
-                        <iframe src="http://192.168.162.250"></iframe>
+                        <div class="miner-label">
+                            <div class="status-dot" id="status4"></div>
+                            Bitaxe #4 - 192.168.162.250
+                        </div>
+                        <iframe src="http://192.168.162.250" id="iframe4"></iframe>
                     </div>
                 </div>
             </div>
@@ -394,19 +422,39 @@
     </div>
 
     <script>
-        // Live Clock
+        // Live Clock - 12-hour format with AM/PM
         function updateClock() {
             const now = new Date();
-            const hours = String(now.getHours()).padStart(2, '0');
+            let hours = now.getHours();
             const minutes = String(now.getMinutes()).padStart(2, '0');
             const seconds = String(now.getSeconds()).padStart(2, '0');
-            document.getElementById('clock').textContent = `${hours}:${minutes}:${seconds}`;
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12;
+            hours = hours ? hours : 12; // the hour '0' should be '12'
+            const hoursStr = String(hours).padStart(2, '0');
+            document.getElementById('clock').textContent = `${hoursStr}:${minutes}:${seconds} ${ampm}`;
         }
-
         updateClock();
         setInterval(updateClock, 1000);
 
-        // Splitter drag code (unchanged)
+        // Proven working green/red status detection (original reliable version)
+        const miners = [
+            { iframe: document.getElementById('iframe1'), dot: document.getElementById('status1') },
+            { iframe: document.getElementById('iframe2'), dot: document.getElementById('status2') },
+            { iframe: document.getElementById('iframe3'), dot: document.getElementById('status3') },
+            { iframe: document.getElementById('iframe4'), dot: document.getElementById('status4') }
+        ];
+
+        miners.forEach(miner => {
+            miner.iframe.onload = () => {
+                miner.dot.classList.add('online');
+            };
+            miner.iframe.onerror = () => {
+                miner.dot.classList.remove('online');
+            };
+        });
+
+        // Original Splitter drag code (unchanged)
         const quadContainer = document.querySelector('.quad-container');
         const leftCol = document.querySelector('.left-col');
         const vSplitter = document.getElementById('v-splitter');
