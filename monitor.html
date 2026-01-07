@@ -514,18 +514,19 @@
             transition: color 0.5s ease, text-shadow 0.5s ease;
         }
 
+        /* REVERSED COLORS: Default = green (no connection), .online = red (connected) */
         .status-dot {
             width: 12px;
             height: 12px;
             border-radius: 50%;
-            background: #f00;
-            box-shadow: 0 0 8px #f00;
+            background: #0f0;           /* Green when no connection / loading / failed */
+            box-shadow: 0 0 8px #0f0;
             transition: background 0.5s ease, box-shadow 0.5s ease;
         }
 
         .status-dot.online {
-            background: #0f0;
-            box-shadow: 0 0 10px #0f0, 0 0 20px #0f0;
+            background: #f00;           /* Red when successfully connected */
+            box-shadow: 0 0 10px #f00, 0 0 20px #f00;
         }
     </style>
 </head>
@@ -624,7 +625,7 @@
                             <div class="status-dot" id="status4"></div>
                             Bitaxe #4 - 192.168.162.250
                         </div>
-                        <iframe src="http://192.168.162.250" id="iframe4"></iframe>
+                        <iframe src="http://192.168.162.251" id="iframe4"></iframe>
                     </div>
                 </div>
             </div>
@@ -784,7 +785,7 @@
             e.stopPropagation();
         });
 
-        // Status dots: red (default/loading/fail) → bright green on success
+        // === SIMPLE & RELIABLE STATUS DOTS: Green on any successful load, red on timeout/redirect ===
         const miners = [
             { iframe: document.getElementById('iframe1'), dot: document.getElementById('status1') },
             { iframe: document.getElementById('iframe2'), dot: document.getElementById('status2') },
@@ -793,12 +794,32 @@
         ];
 
         miners.forEach(miner => {
-            miner.iframe.onload = () => {
-                miner.dot.classList.add('online');
+            const iframe = miner.iframe;
+            const dot = miner.dot;
+
+            // Start red
+            dot.classList.remove('online');
+
+            // Any successful load (200 OK) → green
+            iframe.onload = () => {
+                dot.classList.add('online');
             };
-            miner.iframe.onerror = () => {
-                miner.dot.classList.remove('online');
+
+            // Any error (timeout, CSP block, network failure) → red
+            iframe.onerror = () => {
+                dot.classList.remove('online');
             };
+
+            // Extra safety: if after 6 seconds the iframe is still empty or blocked → red
+            setTimeout(() => {
+                try {
+                    if (!iframe.contentDocument || iframe.contentDocument.readyState !== 'complete') {
+                        dot.classList.remove('online');
+                    }
+                } catch (e) {
+                    dot.classList.remove('online');
+                }
+            }, 6000);
         });
 
         // Splitter drag code with glow matching theme color
