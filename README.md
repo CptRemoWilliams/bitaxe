@@ -1,5 +1,5 @@
 # Quad Miner Monitor 
-BitAxe Quad Mining Monitor Version 1.4.1 (released 1/6/26)
+BitAxe Quad Mining Monitor Version 1.4.4 (released 1/9/26)
 Step 1: Download both files (monitor.html and wallpaper.gif).
 Add the favicon.ico file if you want a browser Bitcoin Icon on your tab.
 Step 2: Place all files in the same folder together.
