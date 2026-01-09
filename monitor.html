@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quad Miner Monitor</title>
     <link rel="icon" href="favicon.ico" type="image/x-icon">
-
     <style>
         body {
             margin: 0;
@@ -24,7 +23,6 @@
             font-family: monospace;
             touch-action: manipulation;
         }
-
         .panel {
             position: relative;
             width: 70vw;
@@ -39,7 +37,6 @@
             display: flex;
             flex-direction: column;
         }
-
         .widget-container {
             width: 100%;
             min-height: 60px;
@@ -53,12 +50,10 @@
             box-sizing: border-box;
             position: relative;
         }
-
         .livecoinwatch-widget-5 {
             width: 100% !important;
             max-width: none !important;
         }
-
         .panel::before {
             content: '';
             position: absolute;
@@ -74,7 +69,6 @@
                 0 calc(100% - 20px) 0 #666,
                 calc(100% - 20px) calc(100% - 20px) 0 #666;
         }
-
         .crt-screen {
             position: relative;
             flex: 1;
@@ -88,7 +82,6 @@
             box-sizing: border-box;
             padding-top: 40px;
         }
-
         .top-bar {
             position: absolute;
             top: 0;
@@ -103,8 +96,6 @@
             z-index: 10;
             pointer-events: none;
         }
-
-        /* Left group: clock, date, and world clock ticker */
         .left-group {
             display: flex;
             align-items: baseline;
@@ -114,13 +105,11 @@
             border-radius: 6px;
             pointer-events: auto;
         }
-
         .clock-and-date {
             display: flex;
             align-items: baseline;
             gap: 8px;
         }
-
         .clock {
             color: var(--clock-color, #0f0);
             font-size: 16px;
@@ -128,7 +117,6 @@
             text-shadow: 0 0 8px var(--clock-color, #0f0);
             white-space: nowrap;
         }
-
         .date {
             color: var(--clock-color, #0f0);
             font-size: 12px;
@@ -137,7 +125,6 @@
             opacity: 0.9;
             white-space: nowrap;
         }
-
         .world-clock {
             display: flex;
             align-items: center;
@@ -147,7 +134,6 @@
             text-shadow: 0 0 6px var(--world-clock-color, #0f8);
             pointer-events: none;
         }
-
         .version {
             background: rgba(0, 0, 0, 0.6);
             color: #ffd700;
@@ -155,7 +141,7 @@
             border-radius: 6px;
             font-size: 14px;
             font-weight: bold;
-            text-shadow: 
+            text-shadow:
                 0 0 5px #ffaa00,
                 0 0 10px #ffd700,
                 0 0 15px #ff8800;
@@ -163,8 +149,50 @@
             pointer-events: auto;
             cursor: pointer;
         }
-
-        /* Title - full clickable pill with neon effect */
+        .clear-all {
+            background: rgba(0, 0, 0, 0.6);
+            color: #ff3366;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: bold;
+            text-shadow:
+                0 0 5px #ff0000,
+                0 0 10px #ff3366,
+                0 0 15px #ff0000;
+            white-space: nowrap;
+            pointer-events: auto;
+            cursor: pointer;
+            margin-left: 10px;
+            transition: all 0.3s ease;
+        }
+        .clear-all:hover {
+            background: rgba(255, 0, 0, 0.2);
+            text-shadow:
+                0 0 10px #ff0000,
+                0 0 20px #ff3366,
+                0 0 30px #ff0000;
+            transform: scale(1.05);
+        }
+        .reset-layout {
+            background: rgba(0, 0, 0, 0.6);
+            color: var(--accent-color, #0f0);
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            text-shadow: 0 0 8px var(--accent-color, #0f0);
+            white-space: nowrap;
+            pointer-events: auto;
+            cursor: pointer;
+            margin-left: 10px;
+            transition: all 0.3s ease;
+        }
+        .reset-layout:hover {
+            background: rgba(0, 255, 0, 0.2);
+            text-shadow: 0 0 15px var(--accent-color, #0f0);
+            transform: scale(1.1);
+        }
         .title-bar {
             position: absolute;
             left: 50%;
@@ -175,11 +203,11 @@
             border-radius: 20px;
             font-size: 12px;
             font-weight: bold;
-            text-shadow: 
+            text-shadow:
                 0 0 10px #ffaa00,
                 0 0 20px #ffd700,
                 0 0 30px #ff8800;
-            box-shadow: 
+            box-shadow:
                 0 0 20px #ffaa00,
                 0 0 40px #ff8800,
                 inset 0 0 10px #000;
@@ -190,42 +218,36 @@
             user-select: none;
             pointer-events: auto;
         }
-
         @keyframes neonPulse {
-            0%, 100% { 
-                text-shadow: 
+            0%, 100% {
+                text-shadow:
                     0 0 10px #ffaa00,
                     0 0 20px #ffd700,
                     0 0 30px #ff8800;
-                box-shadow: 
+                box-shadow:
                     0 0 20px #ffaa00,
                     0 0 40px #ff8800,
                     inset 0 0 10px #000;
             }
-            50% { 
-                text-shadow: 
+            50% {
+                text-shadow:
                     0 0 3px #aa6600,
                     0 0 6px #cc7700,
                     0 0 10px #dd8800;
-                box-shadow: 
+                box-shadow:
                     0 0 5px #aa6600,
                     0 0 10px #cc7700,
                     inset 0 0 10px #000;
             }
         }
-
-        /* Theme Dropdown - right side before version */
         .theme-selector {
-            position: absolute;
-            top: 0;
-            right: 200px;
             height: 40px;
             display: flex;
             align-items: center;
             z-index: 11;
             pointer-events: auto;
+            margin-right: 10px;
         }
-
         .theme-selector select {
             background: rgba(0, 0, 0, 0.7);
             color: #ddd;
@@ -240,8 +262,6 @@
             transform: scale(0.85);
             transform-origin: left center;
         }
-
-        /* Dropdown options - each shows its own color */
         #theme-select option[value="#64B5F6"] { color: #64B5F6; }
         #theme-select option[value="#0f0"] { color: #0f0; }
         #theme-select option[value="#ff6600"] { color: #ff6600; }
@@ -253,8 +273,6 @@
         #theme-select option[value="#32cd32"] { color: #32cd32; }
         #theme-select option[value="#ba55d3"] { color: #ba55d3; }
         #theme-select option[value="#00fa9a"] { color: #00fa9a; }
-
-        /* Elegant popup for version click */
         #version-popup {
             display: none;
             position: fixed;
@@ -273,7 +291,6 @@
             z-index: 1000;
             pointer-events: none;
         }
-
         #version-popup::before {
             content: '';
             position: absolute;
@@ -285,8 +302,6 @@
             -webkit-mask-composite: xor;
             mask-composite: exclude;
         }
-
-        /* Falling coin orbs */
         .coin {
             position: absolute;
             pointer-events: none;
@@ -298,7 +313,6 @@
             animation: fall linear forwards;
             z-index: 999;
         }
-
         @keyframes fall {
             0% {
                 opacity: 0;
@@ -312,28 +326,19 @@
                 transform: translateY(calc(100vh + 50px)) rotate(720deg) scale(1);
             }
         }
-
-        /* Minimal spacer under pill */
-        .title-spacer {
-            height: 8px;
-        }
-
         .quad-container {
             display: flex;
             flex: 1;
             position: relative;
         }
-
         .column {
             display: flex;
             flex-direction: column;
             position: relative;
             min-width: 150px;
         }
-
         .left-col { flex: 0 0 50%; }
         .right-col { flex: 1 1 0%; }
-
         .pane {
             position: relative;
             overflow: hidden;
@@ -343,61 +348,34 @@
             border-radius: 4px;
             transition: border-color 0.5s ease;
         }
-
-        .top-row { 
-            flex: 0 0 50%; 
-        }
-
-        .left-col .top-row {
-            border-top-left-radius: 20px;
-            border-top-right-radius: 0;
-        }
-
-        .right-col .top-row {
-            border-top-left-radius: 0;
-            border-top-right-radius: 20px;
-        }
-
-        .bottom-row { 
-            flex: 1 1 0%; 
-            border-bottom-left-radius: 20px;
-            border-bottom-right-radius: 20px;
-        }
-
-        /* Splitters - normal state */
+        .top-row { flex: 0 0 50%; }
+        .left-col .top-row { border-top-left-radius: 20px; border-top-right-radius: 0; }
+        .right-col .top-row { border-top-left-radius: 0; border-top-right-radius: 20px; }
+        .bottom-row { flex: 1 1 0%; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; }
         .h-splitter, .v-splitter {
             position: relative;
             z-index: 10;
             flex-shrink: 0;
             touch-action: none;
         }
-
         .h-splitter {
             height: 12px;
             background: linear-gradient(to bottom, #3c3c3c, #2a2a2a);
             box-shadow: inset 0 2px 4px rgba(0,0,0,0.6), 0 1px 2px rgba(0,0,0,0.8);
             cursor: ns-resize;
         }
-
         .v-splitter {
             width: 12px;
             background: linear-gradient(to right, #3c3c3c, #2a2a2a);
             box-shadow: inset 2px 0 4px rgba(0,0,0,0.6), 1px 0 2px rgba(0,0,0,0.8);
             cursor: ew-resize;
         }
-
-        /* Active glow when dragging - now uses theme color */
         .splitter-glow {
-            box-shadow: 
+            box-shadow:
                 0 0 20px var(--accent-color),
                 0 0 40px var(--accent-color),
                 inset 0 0 10px #000 !important;
         }
-
-        .splitter-glow::after {
-            box-shadow: 0 0 20px var(--accent-color), 0 0 40px var(--accent-color) !important;
-        }
-
         .v-splitter::before {
             content: '';
             position: absolute;
@@ -407,7 +385,6 @@
             height: calc(100% + 60px);
             cursor: ew-resize;
         }
-
         .cross-handle {
             position: absolute;
             width: 18px;
@@ -417,7 +394,7 @@
             transform: translate(-50%, -50%);
             background: linear-gradient(135deg, #555 0%, #333 50%, #222 100%);
             border-radius: 50%;
-            box-shadow: 
+            box-shadow:
                 inset 0 2px 4px rgba(255,255,255,0.2),
                 inset 0 -2px 4px rgba(0,0,0,0.8),
                 0 1px 3px rgba(0,0,0,0.6);
@@ -426,7 +403,6 @@
             pointer-events: auto;
             touch-action: none;
         }
-
         .cross-handle::before {
             content: '';
             position: absolute;
@@ -437,7 +413,6 @@
             background: rgba(255,255,255,0.15);
             border-radius: 50%;
         }
-
         .h-splitter::after, .v-splitter::after {
             content: '';
             position: absolute;
@@ -445,7 +420,6 @@
             box-shadow: 0 0 8px var(--accent-color, #ffaa00);
             border-radius: 2px;
         }
-
         .h-splitter::after {
             width: 60px;
             height: 4px;
@@ -453,7 +427,6 @@
             left: 50%;
             transform: translate(-50%, -50%);
         }
-
         .v-splitter::after {
             width: 4px;
             height: 60px;
@@ -461,7 +434,6 @@
             left: 50%;
             transform: translate(-50%, -50%);
         }
-
         .crt-screen::before {
             content: '';
             position: absolute;
@@ -470,7 +442,6 @@
             pointer-events: none;
             z-index: 5;
         }
-
         .crt-screen::after {
             content: '';
             position: absolute;
@@ -480,7 +451,6 @@
             z-index: 6;
             border-radius: 50px;
         }
-
         iframe {
             width: 100%;
             height: 100%;
@@ -490,12 +460,10 @@
             left: 0;
             z-index: 1;
         }
-
         @keyframes flicker {
             0% { opacity: 0.98; }
             100% { opacity: 1; }
         }
-
         .miner-label {
             position: absolute;
             top: 10px;
@@ -513,27 +481,200 @@
             gap: 8px;
             transition: color 0.5s ease, text-shadow 0.5s ease;
         }
-
-        /* REVERSED COLORS: Default = green (no connection), .online = red (connected) */
         .status-dot {
             width: 12px;
             height: 12px;
             border-radius: 50%;
-            background: #0f0;           /* Green when no connection / loading / failed */
-            box-shadow: 0 0 8px #0f0;
+            background: #f00;
+            box-shadow: 0 0 8px #f00;
             transition: background 0.5s ease, box-shadow 0.5s ease;
+            flex-shrink: 0;
         }
-
         .status-dot.online {
-            background: #f00;           /* Red when successfully connected */
-            box-shadow: 0 0 10px #f00, 0 0 20px #f00;
+            background: #0f0;
+            box-shadow: 0 0 10px #0f0, 0 0 20px #0f0;
+        }
+        .miner-selector {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 5;
+            pointer-events: auto;
+        }
+        .miner-selector select {
+            width: 155px;
+            min-width: 112px;
+            max-width: 160px;
+            background: rgba(0, 0, 0, 0.7);
+            color: var(--accent-color, #0f0);
+            border: 1px solid var(--accent-color, #0f0);
+            border-top: none;
+            border-radius: 0 0 6px 6px;
+            padding: 5px 7px;
+            font-family: monospace;
+            font-size: 11px;
+            text-align: center;
+            text-shadow: 0 0 4px #000;
+            cursor: pointer;
+            outline: none;
+            box-shadow: inset 0 3px 6px rgba(0,0,0,0.4);
+            transition: all 0.3s ease;
+        }
+        .miner-selector select:hover {
+            background: rgba(0, 0, 0, 0.85);
+            box-shadow: inset 0 3px 10px rgba(0,0,0,0.5), 0 0 10px var(--accent-color, #0f0);
+        }
+        .miner-selector select option {
+            text-align: left;
+        }
+        .ip-needed-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+            pointer-events: none;
+        }
+        .ip-needed-text {
+            font-size: 32px;
+            font-weight: bold;
+            color: var(--accent-color, #0f0);
+            text-shadow: 0 0 20px var(--accent-color, #0f0);
+        }
+        #clear-all-modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 420px;
+            background: #1a1a1a;
+            border: 3px solid #ff0000;
+            border-radius: 12px;
+            box-shadow: 0 0 40px rgba(255, 0, 0, 0.8);
+            z-index: 10001;
+            padding: 25px;
+            color: #ff3366;
+            font-family: monospace;
+            text-align: center;
+            animation: pulseRed 1.5s infinite alternate;
+        }
+        @keyframes pulseRed {
+            0% { box-shadow: 0 0 20px rgba(255, 0, 0, 0.6); border-color: #ff0000; }
+            100% { box-shadow: 0 0 50px rgba(255, 0, 0, 1); border-color: #ff6666; }
+        }
+        @keyframes pulseGreen {
+            0% { box-shadow: 0 0 20px rgba(0, 255, 0, 0.6); border-color: #00ff00; }
+            100% { box-shadow: 0 0 50px rgba(0, 255, 0, 1); border-color: #66ff66; }
+        }
+        #clear-all-modal.success {
+            border: 3px solid #00ff00;
+            color: #00ff66;
+            animation: pulseGreen 1.5s infinite alternate;
+        }
+        #clear-all-modal.success .warning-title {
+            color: #00ff66;
+            text-shadow: 0 0 10px #00ff00;
+        }
+        #clear-all-modal .warning-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-shadow: 0 0 10px #ff0000;
+        }
+        #clear-all-modal .warning-text {
+            font-size: 15px;
+            margin-bottom: 25px;
+            line-height: 1.4;
+        }
+        #clear-all-modal-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+        }
+        #clear-all-confirm, #clear-all-cancel, #clear-all-close {
+            padding: 10px 25px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid currentColor;
+            color: inherit;
+            cursor: pointer;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        #clear-all-confirm:hover, #clear-all-close:hover {
+            background: rgba(0, 255, 0, 0.3);
+        }
+        #clear-all-cancel:hover {
+            background: rgba(0, 0, 0, 0.9);
+        }
+        #custom-prompt, #slot-selector-modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 380px;
+            background: #1a1a1a;
+            border: 2px solid var(--accent-color, #0f0);
+            border-radius: 12px;
+            box-shadow: 0 0 30px var(--accent-color, #0f0);
+            z-index: 10000;
+            padding: 20px;
+            color: var(--accent-color, #0f0);
+            font-family: monospace;
+            text-align: center;
+        }
+        #custom-prompt input {
+            width: 90%;
+            padding: 10px;
+            margin: 15px 0;
+            background: #000;
+            border: 1px solid var(--accent-color, #0f0);
+            color: var(--accent-color, #0f0);
+            font-family: monospace;
+            font-size: 14px;
+            text-align: center;
+        }
+        #custom-prompt-buttons, #slot-selector-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        #custom-prompt-ok, #custom-prompt-cancel, #slot-selector-ok, #slot-selector-cancel {
+            padding: 8px 20px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid var(--accent-color, #0f0);
+            color: var(--accent-color, #0f0);
+            cursor: pointer;
+            border-radius: 6px;
+            font-family: monospace;
+        }
+        #custom-prompt-ok:hover, #custom-prompt-cancel:hover, #slot-selector-ok:hover, #slot-selector-cancel:hover {
+            background: rgba(0, 0, 0, 0.9);
+        }
+        #slot-selector-select {
+            width: 80%;
+            padding: 10px;
+            background: #000;
+            color: var(--accent-color, #0f0);
+            border: 1px solid var(--accent-color, #0f0);
+            border-radius: 6px;
+            font-size: 16px;
+            margin: 15px 0;
         }
     </style>
 </head>
-
 <body>
     <div class="panel">
-        <!-- Crypto ticker -->
         <div class="widget-container">
             <script defer src="https://www.livecoinwatch.com/static/lcw-widget.js"></script>
             <div class="livecoinwatch-widget-5"
@@ -544,15 +685,12 @@
                 lcw-marquee-items="10">
             </div>
         </div>
-
-        <!-- CRT Screen - 4 panes -->
         <div class="crt-screen">
             <div class="top-bar">
-                <!-- Left group: clock, date, and world clock ticker -->
                 <div class="left-group">
                     <div class="clock-and-date">
                         <div class="clock" id="clock">00:00:00 AM</div>
-                        <div class="date" id="date">Jan 06, 2026</div>
+                        <div class="date" id="date">Jan 08, 2026</div>
                     </div>
                     <div class="world-clock">
                         <span id="ny-time">NY: --:-- --</span>
@@ -560,274 +698,393 @@
                         <span id="tok-time">TOK: --:-- --</span>
                     </div>
                 </div>
-
                 <div class="title-bar" id="title-bar">Quad Miner Monitor</div>
-
-                <!-- Theme Dropdown on right before version -->
-                <div class="theme-selector">
-                    <select id="theme-select">
-                        <option value="#64B5F6">Classic Blue</option>
-                        <option value="#0f0">Matrix Green</option>
-                        <option value="#ff6600">Orange Fire</option>
-                        <option value="#9d4edd">Purple Haze</option>
-                        <option value="#ffaa00">Amber Retro</option>
-                        <option value="#00ffff">Cyan Cool</option>
-                        <option value="#ff1493">Deep Pink</option>
-                        <option value="#ff4500">Orange Red</option>
-                        <option value="#32cd32">Lime Green</option>
-                        <option value="#ba55d3">Medium Orchid</option>
-                        <option value="#00fa9a">Spring Green</option>
-                    </select>
+                <div style="display: flex; align-items: center;">
+                    <div class="theme-selector">
+                        <select id="theme-select">
+                            <option value="#64B5F6">Classic Blue</option>
+                            <option value="#0f0">Matrix Green</option>
+                            <option value="#ff6600">Orange Fire</option>
+                            <option value="#9d4edd">Purple Haze</option>
+                            <option value="#ffaa00">Amber Retro</option>
+                            <option value="#00ffff">Cyan Cool</option>
+                            <option value="#ff1493">Deep Pink</option>
+                            <option value="#ff4500">Orange Red</option>
+                            <option value="#32cd32">Lime Green</option>
+                            <option value="#ba55d3">Medium Orchid</option>
+                            <option value="#00fa9a">Spring Green</option>
+                        </select>
+                    </div>
+                    <div class="version" id="version">v1.4.1</div>
+                    <div class="clear-all" id="clear-all">Clear All</div>
+                    <div class="reset-layout" id="reset-layout" title="Reset Layout">♻️</div>
                 </div>
-
-                <div class="version" id="version">v1.4.1</div>
             </div>
-
             <div class="quad-container">
-                <!-- Left Column -->
                 <div class="column left-col">
                     <div class="pane top-row">
                         <div class="miner-label">
                             <div class="status-dot" id="status1"></div>
-                            Bitaxe #1 - 192.168.162.250
+                            Bitaxe #1
                         </div>
-                        <iframe src="http://192.168.162.250" id="iframe1"
-                            sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-top-navigation">
-                        </iframe>
+                        <div class="miner-selector">
+                            <select class="miner-select" data-pane="1">
+                                <option value="overwrite">-- Overwrite Slot --</option>
+                                <option value="slot1">Slot 1 - Empty</option>
+                                <option value="slot2">Slot 2 - Empty</option>
+                                <option value="slot3">Slot 3 - Empty</option>
+                                <option value="slot4">Slot 4 - Empty</option>
+                                <option value="slot5">Slot 5 - Empty</option>
+                                <option value="slot6">Slot 6 - Empty</option>
+                                <option value="clear">-- Clear Slot --</option>
+                            </select>
+                        </div>
+                        <div class="ip-needed-overlay" id="ip-needed1">
+                            <div class="ip-needed-text">IP address needed</div>
+                        </div>
+                        <iframe src="about:blank" id="iframe1" sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-top-navigation"></iframe>
                     </div>
                     <div class="h-splitter"></div>
                     <div class="pane bottom-row">
                         <div class="miner-label">
                             <div class="status-dot" id="status2"></div>
-                            Bitaxe #2 - 192.168.162.250
+                            Bitaxe #2
                         </div>
-                        <iframe src="http://192.168.162.250" id="iframe2"></iframe>
+                        <div class="miner-selector">
+                            <select class="miner-select" data-pane="2">
+                                <option value="overwrite">-- Overwrite Slot --</option>
+                                <option value="slot1">Slot 1 - Empty</option>
+                                <option value="slot2">Slot 2 - Empty</option>
+                                <option value="slot3">Slot 3 - Empty</option>
+                                <option value="slot4">Slot 4 - Empty</option>
+                                <option value="slot5">Slot 5 - Empty</option>
+                                <option value="slot6">Slot 6 - Empty</option>
+                                <option value="clear">-- Clear Slot --</option>
+                            </select>
+                        </div>
+                        <div class="ip-needed-overlay" id="ip-needed2">
+                            <div class="ip-needed-text">IP address needed</div>
+                        </div>
+                        <iframe src="about:blank" id="iframe2" sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-top-navigation"></iframe>
                     </div>
                 </div>
-
-                <!-- Vertical Splitter -->
                 <div class="v-splitter" id="v-splitter">
                     <div class="cross-handle" id="cross-handle"></div>
                 </div>
-
-                <!-- Right Column -->
                 <div class="column right-col">
                     <div class="pane top-row">
                         <div class="miner-label">
                             <div class="status-dot" id="status3"></div>
-                            Bitaxe #3 - 192.168.162.250
+                            Bitaxe #3
                         </div>
-                        <iframe src="http://192.168.162.250" id="iframe3"></iframe>
+                        <div class="miner-selector">
+                            <select class="miner-select" data-pane="3">
+                                <option value="overwrite">-- Overwrite Slot --</option>
+                                <option value="slot1">Slot 1 - Empty</option>
+                                <option value="slot2">Slot 2 - Empty</option>
+                                <option value="slot3">Slot 3 - Empty</option>
+                                <option value="slot4">Slot 4 - Empty</option>
+                                <option value="slot5">Slot 5 - Empty</option>
+                                <option value="slot6">Slot 6 - Empty</option>
+                                <option value="clear">-- Clear Slot --</option>
+                            </select>
+                        </div>
+                        <div class="ip-needed-overlay" id="ip-needed3">
+                            <div class="ip-needed-text">IP address needed</div>
+                        </div>
+                        <iframe src="about:blank" id="iframe3" sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-top-navigation"></iframe>
                     </div>
                     <div class="h-splitter"></div>
                     <div class="pane bottom-row">
                         <div class="miner-label">
                             <div class="status-dot" id="status4"></div>
-                            Bitaxe #4 - 192.168.162.250
+                            Bitaxe #4
                         </div>
-                        <iframe src="http://192.168.162.250" id="iframe4"></iframe>
+                        <div class="miner-selector">
+                            <select class="miner-select" data-pane="4">
+                                <option value="overwrite">-- Overwrite Slot --</option>
+                                <option value="slot1">Slot 1 - Empty</option>
+                                <option value="slot2">Slot 2 - Empty</option>
+                                <option value="slot3">Slot 3 - Empty</option>
+                                <option value="slot4">Slot 4 - Empty</option>
+                                <option value="slot5">Slot 5 - Empty</option>
+                                <option value="slot6">Slot 6 - Empty</option>
+                                <option value="clear">-- Clear Slot --</option>
+                            </select>
+                        </div>
+                        <div class="ip-needed-overlay" id="ip-needed4">
+                            <div class="ip-needed-text">IP address needed</div>
+                        </div>
+                        <iframe src="about:blank" id="iframe4" sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-top-navigation"></iframe>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Elegant popup message -->
+    <div id="custom-prompt">
+        <div id="prompt-message">Enter miner URL:</div>
+        <input type="text" id="prompt-input" value="http://192.168.?.?">
+        <div id="custom-prompt-buttons">
+            <button id="custom-prompt-ok">OK</button>
+            <button id="custom-prompt-cancel">Cancel</button>
+        </div>
+    </div>
+    <div id="slot-selector-modal">
+        <div id="slot-selector-title">Select slot</div>
+        <select id="slot-selector-select">
+            <option value="" disabled selected>Choose slot…</option>
+            <option value="1">Slot 1</option>
+            <option value="2">Slot 2</option>
+            <option value="3">Slot 3</option>
+            <option value="4">Slot 4</option>
+            <option value="5">Slot 5</option>
+            <option value="6">Slot 6</option>
+        </select>
+        <div id="slot-selector-buttons">
+            <button id="slot-selector-ok">OK</button>
+            <button id="slot-selector-cancel">Cancel</button>
+        </div>
+    </div>
     <div id="version-popup">
         Software By Capt Remo Williams<br>
         Bitcoin donations accepted:<br>
         bc1qthemczxfdcqhxmfj65rqn30t85ll93xh39s4dq<br><br>
         Enjoy your day!
     </div>
+    <div id="clear-all-modal">
+        <div class="warning-title">WARNING: CLEAR ALL MINERS</div>
+        <div class="warning-text">
+            This will permanently delete ALL saved miner URLs<br>
+            across all four quadrants and reset everything.<br><br>
+            This action cannot be undone.
+        </div>
+        <div id="clear-all-modal-buttons">
+            <button id="clear-all-confirm">Confirm Clear All</button>
+            <button id="clear-all-cancel">Cancel</button>
+        </div>
+    </div>
 
     <script>
-        // Helper function to lighten a hex color by a percentage
         function lightenColor(hex, percent = 0.5) {
-            // Special case for pure green (#0f0) - use a bright lime instead of near-white
-            if (hex.toLowerCase() === '#0f0' || hex.toLowerCase() === '#00ff00') {
-                return '#00ff66';
-            }
-
+            if (hex.toLowerCase() === '#0f0' || hex.toLowerCase() === '#00ff00') return '#00ff66';
             hex = hex.replace('#', '');
             let r = parseInt(hex.substr(0, 2), 16);
             let g = parseInt(hex.substr(2, 2), 16);
             let b = parseInt(hex.substr(4, 2), 16);
-
             r = Math.min(255, Math.floor(r + (255 - r) * percent));
             g = Math.min(255, Math.floor(g + (255 - g) * percent));
             b = Math.min(255, Math.floor(b + (255 - b) * percent));
-
             return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
         }
 
-        // Live Local Clock + Date
         function updateLocalClockAndDate() {
             const now = new Date();
             let hours = now.getHours();
             const minutes = String(now.getMinutes()).padStart(2, '0');
             const seconds = String(now.getSeconds()).padStart(2, '0');
             const ampm = hours >= 12 ? 'PM' : 'AM';
-            hours = hours % 12;
-            hours = hours ? hours : 12;
+            hours = hours % 12 || 12;
             const hoursStr = String(hours).padStart(2, '0');
-
             const options = { month: 'short', day: '2-digit', year: 'numeric' };
             const dateStr = now.toLocaleDateString('en-US', options);
-
             document.getElementById('clock').textContent = `${hoursStr}:${minutes}:${seconds} ${ampm}`;
             document.getElementById('date').textContent = dateStr;
         }
         updateLocalClockAndDate();
         setInterval(updateLocalClockAndDate, 1000);
 
-        // World Clock Ticker
         function updateWorldClock() {
             const now = new Date();
-
-            const nyFormatter = new Intl.DateTimeFormat('en-US', {
-                timeZone: 'America/New_York',
-                hour: 'numeric',
-                minute: '2-digit',
-                hour12: true
-            });
-            document.getElementById('ny-time').textContent = `NY: ${nyFormatter.format(now).toUpperCase()}`;
-
-            const ldnFormatter = new Intl.DateTimeFormat('en-US', {
-                timeZone: 'Europe/London',
-                hour: 'numeric',
-                minute: '2-digit',
-                hour12: true
-            });
-            document.getElementById('ldn-time').textContent = `LDN: ${ldnFormatter.format(now).toUpperCase()}`;
-
-            const tokFormatter = new Intl.DateTimeFormat('en-US', {
-                timeZone: 'Asia/Tokyo',
-                hour: 'numeric',
-                minute: '2-digit',
-                hour12: true
-            });
-            document.getElementById('tok-time').textContent = `TOK: ${tokFormatter.format(now).toUpperCase()}`;
+            const ny = new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', hour: 'numeric', minute: '2-digit', hour12: true }).format(now).toUpperCase();
+            const ldn = new Intl.DateTimeFormat('en-US', { timeZone: 'Europe/London', hour: 'numeric', minute: '2-digit', hour12: true }).format(now).toUpperCase();
+            const tok = new Intl.DateTimeFormat('en-US', { timeZone: 'Asia/Tokyo', hour: 'numeric', minute: '2-digit', hour12: true }).format(now).toUpperCase();
+            document.getElementById('ny-time').textContent = `NY: ${ny}`;
+            document.getElementById('ldn-time').textContent = `LDN: ${ldn}`;
+            document.getElementById('tok-time').textContent = `TOK: ${tok}`;
         }
         updateWorldClock();
         setInterval(updateWorldClock, 1000);
 
-        // Theme Selector
         const themeSelect = document.getElementById('theme-select');
+        const savedColor = localStorage.getItem('selectedThemeColor') || '#64B5F6';
+        document.documentElement.style.setProperty('--accent-color', savedColor);
+        document.documentElement.style.setProperty('--clock-color', savedColor);
+        document.documentElement.style.setProperty('--world-clock-color', lightenColor(savedColor, 0.5));
+        themeSelect.value = savedColor;
+        themeSelect.style.color = savedColor;
         themeSelect.addEventListener('change', (e) => {
             const color = e.target.value;
             document.documentElement.style.setProperty('--accent-color', color);
             document.documentElement.style.setProperty('--clock-color', color);
-
-            // World clock = 50% lighter version (with special case for green)
-            const lighter = lightenColor(color, 0.5);
-            document.documentElement.style.setProperty('--world-clock-color', lighter);
-
+            document.documentElement.style.setProperty('--world-clock-color', lightenColor(color, 0.5));
             themeSelect.style.color = color;
+            localStorage.setItem('selectedThemeColor', color);
         });
 
-        // Initial colors
-        const initialColor = themeSelect.value;
-        document.documentElement.style.setProperty('--accent-color', initialColor);
-        document.documentElement.style.setProperty('--clock-color', initialColor);
-        const initialLighter = lightenColor(initialColor, 0.5);
-        document.documentElement.style.setProperty('--world-clock-color', initialLighter);
-        themeSelect.style.color = initialColor;
-
-        // Coins falling from top when clicking title
-        const titleBar = document.getElementById('title-bar');
-        titleBar.addEventListener('click', (e) => {
+        document.getElementById('title-bar').addEventListener('click', (e) => {
             e.stopPropagation();
-            e.preventDefault();
-
-            for (let i = 0; i < 30; i++) {
-                createCoin();
-            }
+            for (let i = 0; i < 30; i++) createCoin();
         });
-
         function createCoin() {
             const coin = document.createElement('div');
             coin.classList.add('coin');
             document.body.appendChild(coin);
-
             const leftPos = Math.random() * window.innerWidth;
             coin.style.left = leftPos + 'px';
             coin.style.top = '-20px';
-
             const duration = 2 + Math.random() * 3;
             coin.style.animationDuration = duration + 's';
-
             const drift = (Math.random() - 0.5) * 200;
-            coin.style.animation = `fall ${duration}s linear forwards`;
-            coin.style.transform += ` translateX(${drift}px)`;
+            coin.style.transform = `translateX(${drift}px)`;
+            coin.addEventListener('animationend', () => coin.remove(), { once: true });
+        }
 
-            coin.addEventListener('animationend', () => {
-                coin.remove();
+        const version = document.getElementById('version');
+        const popup = document.getElementById('version-popup');
+        version.addEventListener('click', (e) => { e.stopPropagation(); popup.style.display = 'block'; setTimeout(() => popup.style.display = 'none', 5000); });
+        document.addEventListener('click', () => popup.style.display = 'none');
+        popup.addEventListener('click', e => e.stopPropagation());
+
+        const customPrompt = document.getElementById('custom-prompt');
+        const promptMessage = document.getElementById('prompt-message');
+        const promptInput = document.getElementById('prompt-input');
+        const promptOk = document.getElementById('custom-prompt-ok');
+        const promptCancel = document.getElementById('custom-prompt-cancel');
+        const slotModal = document.getElementById('slot-selector-modal');
+        const slotTitle = document.getElementById('slot-selector-title');
+        const slotSelect = document.getElementById('slot-selector-select');
+        const slotOk = document.getElementById('slot-selector-ok');
+        const slotCancel = document.getElementById('slot-selector-cancel');
+        let currentResolve = null;
+        let currentSlotCallback = null;
+
+        function showCustomPrompt(message, defaultValue = 'http://192.168.?.?') {
+            return new Promise(resolve => {
+                promptMessage.textContent = message;
+                promptInput.value = defaultValue;
+                promptInput.focus();
+                promptInput.setSelectionRange(0, promptInput.value.length);
+                customPrompt.style.display = 'block';
+                currentResolve = resolve;
+                const confirmAction = () => {
+                    customPrompt.style.display = 'none';
+                    resolve(promptInput.value.trim());
+                };
+                promptOk.onclick = confirmAction;
+                promptInput.onkeydown = e => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        confirmAction();
+                    } else if (e.key === 'Escape') {
+                        customPrompt.style.display = 'none';
+                        resolve(null);
+                    }
+                };
+                promptCancel.onclick = () => {
+                    customPrompt.style.display = 'none';
+                    resolve(null);
+                };
             });
         }
 
-        // Version popup on click
-        const version = document.getElementById('version');
-        const popup = document.getElementById('version-popup');
-
-        version.addEventListener('click', (e) => {
-            e.stopPropagation();
-            popup.style.display = 'block';
-            setTimeout(() => {
-                popup.style.display = 'none';
-            }, 5000);
-        });
-
-        document.addEventListener('click', () => {
-            popup.style.display = 'none';
-        });
-
-        popup.addEventListener('click', (e) => {
-            e.stopPropagation();
-        });
-
-        // === SIMPLE & RELIABLE STATUS DOTS: Green on any successful load, red on timeout/redirect ===
-        const miners = [
-            { iframe: document.getElementById('iframe1'), dot: document.getElementById('status1') },
-            { iframe: document.getElementById('iframe2'), dot: document.getElementById('status2') },
-            { iframe: document.getElementById('iframe3'), dot: document.getElementById('status3') },
-            { iframe: document.getElementById('iframe4'), dot: document.getElementById('status4') }
-        ];
-
-        miners.forEach(miner => {
-            const iframe = miner.iframe;
-            const dot = miner.dot;
-
-            // Start red
-            dot.classList.remove('online');
-
-            // Any successful load (200 OK) → green
-            iframe.onload = () => {
-                dot.classList.add('online');
-            };
-
-            // Any error (timeout, CSP block, network failure) → red
-            iframe.onerror = () => {
-                dot.classList.remove('online');
-            };
-
-            // Extra safety: if after 6 seconds the iframe is still empty or blocked → red
-            setTimeout(() => {
-                try {
-                    if (!iframe.contentDocument || iframe.contentDocument.readyState !== 'complete') {
-                        dot.classList.remove('online');
-                    }
-                } catch (e) {
-                    dot.classList.remove('online');
+        function showSlotSelectorModal(title, callback, pane) {
+            slotTitle.textContent = title;
+            slotSelect.innerHTML = '<option value="" disabled selected>Choose slot…</option>';
+            for (let i = 1; i <= 6; i++) {
+                const saved = localStorage.getItem(`pane${pane}-slot${i}`);
+                const opt = document.createElement('option');
+                opt.value = i;
+                opt.textContent = saved ? `Slot ${i}: ${saved}` : `Slot ${i} - Empty`;
+                slotSelect.appendChild(opt);
+            }
+            slotModal.style.display = 'block';
+            currentSlotCallback = callback;
+            slotOk.onclick = () => {
+                slotModal.style.display = 'none';
+                if (slotSelect.value) {
+                    callback(parseInt(slotSelect.value));
+                } else {
+                    callback(null);
                 }
-            }, 6000);
+            };
+            slotCancel.onclick = () => {
+                slotModal.style.display = 'none';
+                callback(null);
+            };
+        }
+
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') {
+                if (customPrompt.style.display === 'block') {
+                    customPrompt.style.display = 'none';
+                    if (currentResolve) currentResolve(null);
+                }
+                if (slotModal.style.display === 'block') {
+                    slotModal.style.display = 'none';
+                    if (currentSlotCallback) currentSlotCallback(null);
+                }
+                if (document.getElementById('clear-all-modal').style.display === 'block') {
+                    document.getElementById('clear-all-modal').style.display = 'none';
+                }
+            }
         });
 
-        // Splitter drag code with glow matching theme color
+        const clearAllBtn = document.getElementById('clear-all');
+        const clearAllModal = document.getElementById('clear-all-modal');
+        const modalTitle = clearAllModal.querySelector('.warning-title');
+        const modalText = clearAllModal.querySelector('.warning-text');
+        const modalButtons = document.getElementById('clear-all-modal-buttons');
+        clearAllBtn.addEventListener('click', e => {
+            e.stopPropagation();
+            clearAllModal.classList.remove('success');
+            modalTitle.textContent = 'WARNING: CLEAR ALL MINERS';
+            modalText.innerHTML = 'This will permanently delete ALL saved miner URLs<br>across all four quadrants and reset everything.<br><br>This action cannot be undone.';
+            modalButtons.innerHTML = `
+                <button id="clear-all-confirm">Confirm Clear All</button>
+                <button id="clear-all-cancel">Cancel</button>
+            `;
+            modalButtons.style.display = 'flex';
+            clearAllModal.style.display = 'block';
+            document.getElementById('clear-all-cancel').onclick = () => clearAllModal.style.display = 'none';
+            document.getElementById('clear-all-confirm').onclick = performClearAll;
+        });
+
+        function performClearAll() {
+            for (let pane = 1; pane <= 4; pane++) {
+                const select = document.querySelector(`.miner-select[data-pane="${pane}"]`);
+                const iframe = document.getElementById(`iframe${pane}`);
+                const statusDot = document.getElementById(`status${pane}`);
+                const overlay = document.getElementById(`ip-needed${pane}`);
+                for (let i = 1; i <= 6; i++) {
+                    localStorage.removeItem(`pane${pane}-slot${i}`);
+                    select.options[i].value = `slot${i}`;
+                    select.options[i].textContent = `Slot ${i} - Empty`;
+                }
+                localStorage.removeItem(`pane${pane}-current`);
+                iframe.src = 'about:blank';
+                select.selectedIndex = 0;
+                statusDot.classList.remove('online');
+                overlay.style.display = 'flex';
+            }
+            clearAllModal.classList.add('success');
+            modalTitle.textContent = 'SUCCESS';
+            modalText.textContent = 'All miner slots cleared and panes reset!';
+            modalButtons.innerHTML = '<button id="clear-all-close">Close</button>';
+            document.getElementById('clear-all-close').onclick = () => clearAllModal.style.display = 'none';
+        }
+
+        document.getElementById('reset-layout').addEventListener('click', e => {
+            e.stopPropagation();
+            document.querySelector('.left-col').style.flex = '0 0 50%';
+            document.querySelectorAll('.top-row').forEach(pane => {
+                pane.style.flex = '0 0 50%';
+            });
+        });
+
         const quadContainer = document.querySelector('.quad-container');
-        const leftCol = document.querySelector('.left-col');
         const vSplitter = document.getElementById('v-splitter');
         const crossHandle = document.getElementById('cross-handle');
-
         let isDragging = false;
         let dragType = null;
         let dragOverlay = null;
@@ -835,10 +1092,8 @@
         function createOverlay(cursor) {
             const overlay = document.createElement('div');
             overlay.style.position = 'fixed';
-            overlay.style.top = '0';
-            overlay.style.left = '0';
-            overlay.style.width = '100vw';
-            overlay.style.height = '100vh';
+            overlay.style.top = '0'; overlay.style.left = '0';
+            overlay.style.width = '100vw'; overlay.style.height = '100vh';
             overlay.style.cursor = cursor;
             overlay.style.zIndex = '9999';
             overlay.style.background = 'transparent';
@@ -846,14 +1101,12 @@
             overlay.style.touchAction = 'none';
             return overlay;
         }
-
         function getClientPos(e) {
             if (e.touches && e.touches.length > 0) {
                 return { clientX: e.touches[0].clientX, clientY: e.touches[0].clientY };
             }
             return { clientX: e.clientX, clientY: e.clientY };
         }
-
         function startDrag(type, cursor) {
             return function(e) {
                 if (e.type.startsWith('touch')) e.preventDefault();
@@ -863,78 +1116,201 @@
                 dragOverlay = createOverlay(cursor);
                 document.body.appendChild(dragOverlay);
                 e.stopPropagation();
-
                 const hSplitters = document.querySelectorAll('.h-splitter');
                 const vSplitterEl = document.querySelector('.v-splitter');
-
-                if (type === 'h' || type === 'cross') {
-                    hSplitters.forEach(s => s.classList.add('splitter-glow'));
-                }
-                if (type === 'v' || type === 'cross') {
-                    vSplitterEl.classList.add('splitter-glow');
-                }
+                if (type === 'h' || type === 'cross') hSplitters.forEach(s => s.classList.add('splitter-glow'));
+                if (type === 'v' || type === 'cross') vSplitterEl.classList.add('splitter-glow');
             };
         }
-
-        function stopDragging(e) {
+        function stopDragging() {
             if (isDragging) {
                 isDragging = false;
                 dragType = null;
                 document.body.style.cursor = 'default';
-                if (dragOverlay && dragOverlay.parentElement) {
-                    dragOverlay.parentElement.removeChild(dragOverlay);
-                }
-                dragOverlay = null;
-
-                document.querySelectorAll('.h-splitter, .v-splitter').forEach(s => {
-                    s.classList.remove('splitter-glow');
-                });
+                if (dragOverlay && dragOverlay.parentElement) dragOverlay.parentElement.removeChild(dragOverlay);
+                document.querySelectorAll('.h-splitter, .v-splitter').forEach(s => s.classList.remove('splitter-glow'));
             }
         }
-
         function onMove(e) {
             if (!isDragging) return;
             if (e.type.startsWith('touch')) e.preventDefault();
-
             const pos = getClientPos(e);
             const rect = quadContainer.getBoundingClientRect();
             const thickness = 12;
-
             if (dragType === 'h' || dragType === 'cross') {
                 let newTopHeight = pos.clientY - rect.top;
                 const availableHeight = rect.height - thickness;
                 newTopHeight = Math.max(100, Math.min(newTopHeight, availableHeight - 100));
-
-                document.querySelectorAll('.top-row').forEach(pane => {
-                    pane.style.flex = `0 0 ${newTopHeight}px`;
-                });
+                document.querySelectorAll('.top-row').forEach(pane => pane.style.flex = `0 0 ${newTopHeight}px`);
             }
-
             if (dragType === 'v' || dragType === 'cross') {
                 let newLeftWidth = pos.clientX - rect.left;
                 const availableWidth = rect.width - thickness;
                 newLeftWidth = Math.max(150, Math.min(newLeftWidth, availableWidth - 150));
-
-                leftCol.style.flex = `0 0 ${newLeftWidth}px`;
+                document.querySelector('.left-col').style.flex = `0 0 ${newLeftWidth}px`;
             }
         }
 
         document.querySelectorAll('.h-splitter').forEach(splitter => {
             splitter.addEventListener('mousedown', startDrag('h', 'ns-resize'));
+            splitter.addEventListener('touchstart', startDrag('h', 'ns-resize'), { passive: false });
         });
         vSplitter.addEventListener('mousedown', startDrag('v', 'ew-resize'));
+        vSplitter.addEventListener('touchstart', startDrag('v', 'ew-resize'), { passive: false });
         crossHandle.addEventListener('mousedown', startDrag('cross', 'move'));
+        crossHandle.addEventListener('touchstart', startDrag('cross', 'move'), { passive: false });
         document.addEventListener('mousemove', onMove);
         document.addEventListener('mouseup', stopDragging);
         document.addEventListener('mouseleave', stopDragging);
-
-        document.querySelectorAll('.h-splitter').forEach(splitter => {
-            splitter.addEventListener('touchstart', startDrag('h', 'ns-resize'), { passive: false });
-        });
-        vSplitter.addEventListener('touchstart', startDrag('v', 'ew-resize'), { passive: false });
-        crossHandle.addEventListener('touchstart', startDrag('cross', 'move'), { passive: false });
         document.addEventListener('touchmove', onMove, { passive: false });
         document.addEventListener('touchend', stopDragging);
+
+        document.querySelectorAll('.h-splitter, .v-splitter, .cross-handle').forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                if (!isDragging) document.querySelectorAll('.h-splitter, .v-splitter').forEach(s => s.classList.add('splitter-glow'));
+            });
+            el.addEventListener('mouseleave', () => {
+                if (!isDragging) document.querySelectorAll('.h-splitter, .v-splitter').forEach(s => s.classList.remove('splitter-glow'));
+            });
+        });
+
+        // === FINAL MINER LOGIC - OVERWRITE FIXED ===
+        document.querySelectorAll('.miner-select').forEach(select => {
+            const pane = select.dataset.pane;
+            const iframe = document.getElementById('iframe' + pane);
+            const statusDot = document.getElementById('status' + pane);
+            const ipNeededOverlay = document.getElementById('ip-needed' + pane);
+
+            // Populate saved slots
+            for (let i = 1; i <= 6; i++) {
+                const saved = localStorage.getItem(`pane${pane}-slot${i}`);
+                if (saved) {
+                    select.options[i].value = saved;
+                    select.options[i].textContent = `Slot ${i}: ${saved}`;
+                }
+            }
+
+            // Restore current
+            const current = localStorage.getItem(`pane${pane}-current`) || '';
+            if (current) {
+                iframe.src = current;
+                Array.from(select.options).forEach(opt => {
+                    if (opt.value === current) opt.selected = true;
+                });
+                ipNeededOverlay.style.display = 'none';
+            } else {
+                iframe.src = 'about:blank';
+                ipNeededOverlay.style.display = 'flex';
+                select.selectedIndex = 0;
+            }
+
+            iframe.onload = () => {
+                if (iframe.src === 'about:blank' || !iframe.src) {
+                    statusDot.classList.remove('online');
+                    return;
+                }
+
+                let isLikelySuccess = true;
+
+                try {
+                    const bodyText = (iframe.contentWindow.document.body?.innerText || '').toLowerCase();
+                    const keywords = ['gh/s', 'th/s', 'hashrate', 'temperature', 'uptime', 'bitaxe', 'shares', 'best diff'];
+                    if (!keywords.some(k => bodyText.includes(k))) {
+                        isLikelySuccess = false;
+                    }
+                } catch (e) {
+                    if (e.name === 'SecurityError') {
+                        isLikelySuccess = true;
+                    } else {
+                        isLikelySuccess = false;
+                    }
+                }
+
+                if (isLikelySuccess) {
+                    statusDot.classList.add('online');
+                    ipNeededOverlay.style.display = 'none';
+                } else {
+                    statusDot.classList.remove('online');
+                }
+            };
+
+            iframe.onerror = () => {
+                statusDot.classList.remove('online');
+                ipNeededOverlay.style.display = 'flex';
+                iframe.src = 'about:blank';
+            };
+
+            select.addEventListener('change', async function() {
+                const val = this.value;
+
+                if (val.startsWith('slot') && this.options[this.selectedIndex].textContent.includes('- Empty')) {
+                    const slotNum = parseInt(val.replace('slot', ''));
+                    const url = await showCustomPrompt(`Enter miner URL for Slot ${slotNum}:`, 'http://192.168.?.?');
+                    if (!url) { this.selectedIndex = 0; return; }
+                    let clean = url.trim();
+                    if (!clean.match(/^https?:\/\//i)) clean = 'http://' + clean;
+                    localStorage.setItem(`pane${pane}-slot${slotNum}`, clean);
+                    this.options[slotNum].value = clean;
+                    this.options[slotNum].textContent = `Slot ${slotNum}: ${clean}`;
+                    iframe.src = clean;
+                    localStorage.setItem(`pane${pane}-current`, clean);
+                    this.value = clean;
+                    ipNeededOverlay.style.display = 'none';
+                    return;
+                }
+
+                if (val === 'overwrite') {
+                    showSlotSelectorModal('Select slot to overwrite', async slotNum => {
+                        if (!slotNum) { this.selectedIndex = 0; return; }
+                        const url = await showCustomPrompt(`Enter new miner URL for Slot ${slotNum}:`, 'http://192.168.?.?');
+                        if (!url) { this.selectedIndex = 0; return; }
+                        let clean = url.trim();
+                        if (!clean.match(/^https?:\/\//i)) clean = 'http://' + clean;
+                        localStorage.setItem(`pane${pane}-slot${slotNum}`, clean);
+                        this.options[slotNum].value = clean;
+                        this.options[slotNum].textContent = `Slot ${slotNum}: ${clean}`;
+                        iframe.src = clean;
+                        localStorage.setItem(`pane${pane}-current`, clean);
+                        this.value = clean;  // <-- FIXED: now selects the updated slot
+                        ipNeededOverlay.style.display = 'none';
+                    }, pane);
+                    return;
+                }
+
+                if (val === 'clear') {
+                    showSlotSelectorModal('Select slot to clear', slotNum => {
+                        if (!slotNum) { this.selectedIndex = 0; return; }
+
+                        const clearedUrl = localStorage.getItem(`pane${pane}-slot${slotNum}`);
+                        localStorage.removeItem(`pane${pane}-slot${slotNum}`);
+                        this.options[slotNum].value = `slot${slotNum}`;
+                        this.options[slotNum].textContent = `Slot ${slotNum} - Empty`;
+
+                        const currentUrl = localStorage.getItem(`pane${pane}-current`);
+                        if (currentUrl === clearedUrl) {
+                            iframe.src = 'about:blank';
+                            localStorage.removeItem(`pane${pane}-current`);
+                            ipNeededOverlay.style.display = 'flex';
+                            statusDot.classList.remove('online');
+                        }
+
+                        this.selectedIndex = 0;
+                    }, pane);
+                    return;
+                }
+
+                if (val) {
+                    iframe.src = val;
+                    localStorage.setItem(`pane${pane}-current`, val);
+                    ipNeededOverlay.style.display = 'none';
+                } else {
+                    iframe.src = 'about:blank';
+                    localStorage.removeItem(`pane${pane}-current`);
+                    ipNeededOverlay.style.display = 'flex';
+                    statusDot.classList.remove('online');
+                }
+            });
+        });
     </script>
 </body>
 </html>
