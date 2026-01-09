@@ -1,13 +1,16 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Quad Miner Monitor - Created by Captain Remo Williams (@AdmRemoWilliams) - January 2026 -->
-    <meta charset="UTF-8">
+    <!-- Quad Miner Monitor - Created by Captain Remo Williams (@CptRemoWilliams) - January 2026 -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quad Miner Monitor</title>
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <style>
+        :root {
+            --accent-color-rgb: 100, 181, 246; /* fallback for blue */
+        }
+
         body {
             margin: 0;
             padding: 0;
@@ -222,24 +225,12 @@
         }
         @keyframes neonPulse {
             0%, 100% {
-                text-shadow:
-                    0 0 10px #ffaa00,
-                    0 0 20px #ffd700,
-                    0 0 30px #ff8800;
-                box-shadow:
-                    0 0 20px #ffaa00,
-                    0 0 40px #ff8800,
-                    inset 0 0 10px #000;
+                text-shadow: 0 0 10px #ffaa00, 0 0 20px #ffd700, 0 0 30px #ff8800;
+                box-shadow: 0 0 20px #ffaa00, 0 0 40px #ff8800, inset 0 0 10px #000;
             }
             50% {
-                text-shadow:
-                    0 0 3px #aa6600,
-                    0 0 6px #cc7700,
-                    0 0 10px #dd8800;
-                box-shadow:
-                    0 0 5px #aa6600,
-                    0 0 10px #cc7700,
-                    inset 0 0 10px #000;
+                text-shadow: 0 0 3px #aa6600, 0 0 6px #cc7700, 0 0 10px #dd8800;
+                box-shadow: 0 0 5px #aa6600, 0 0 10px #cc7700, inset 0 0 10px #000;
             }
         }
         .theme-selector {
@@ -275,6 +266,7 @@
         #theme-select option[value="#32cd32"] { color: #32cd32; }
         #theme-select option[value="#ba55d3"] { color: #ba55d3; }
         #theme-select option[value="#00fa9a"] { color: #00fa9a; }
+
         #version-popup {
             display: none;
             position: fixed;
@@ -316,17 +308,9 @@
             z-index: 999;
         }
         @keyframes fall {
-            0% {
-                opacity: 0;
-                transform: translateY(-20px) rotate(0deg) scale(0.6);
-            }
-            10% {
-                opacity: 1;
-            }
-            100% {
-                opacity: 0;
-                transform: translateY(calc(100vh + 50px)) rotate(720deg) scale(1);
-            }
+            0% { opacity: 0; transform: translateY(-20px) rotate(0deg) scale(0.6); }
+            10% { opacity: 1; }
+            100% { opacity: 0; transform: translateY(calc(100vh + 50px)) rotate(720deg) scale(1); }
         }
         .quad-container {
             display: flex;
@@ -354,6 +338,84 @@
         .left-col .top-row { border-top-left-radius: 20px; border-top-right-radius: 0; }
         .right-col .top-row { border-top-left-radius: 0; border-top-right-radius: 20px; }
         .bottom-row { flex: 1 1 0%; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; }
+
+        /* ── ZOOM BUTTONS: SLIGHTLY LEFT + SUBTLE GLOW ON +/− ─────────── */
+        .pane-wrapper {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            border-radius: inherit;
+        }
+
+        .zoomed-iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+            transform-origin: 0 0;
+            transition: transform 0.25s ease;
+            will-change: transform;
+        }
+
+        .zoom-controls {
+            position: absolute;
+            top: 58px;
+            right: 16px;  /* ← Moved slightly left (from 8px → 16px) */
+            z-index: 6;
+            display: flex;
+            gap: 5px;
+            background: rgba(0,0,0,0.10);
+            padding: 4px 6px;
+            border-radius: 6px;
+            border: 1px solid rgba(var(--accent-color-rgb), 0.20);
+            box-shadow: 0 0 6px rgba(var(--accent-color-rgb), 0.30);
+            opacity: 0.60;
+            transition: all 0.3s ease;
+        }
+
+        .zoom-controls:hover {
+            background: rgba(0,0,0,0.75);
+            border: 1px solid var(--accent-color);
+            box-shadow: 0 0 14px var(--accent-color);
+            opacity: 1;
+        }
+
+        .zoom-btn {
+            background: transparent;
+            color: transparent;
+            text-shadow: 0 0 10px var(--accent-color), 0 0 16px var(--accent-color); /* soft glow on +/− */
+            border: 1px solid rgba(var(--accent-color-rgb), 0.35);
+            border-radius: 4px;
+            width: 24px;
+            height: 24px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            user-select: none;
+            transition: all 0.2s ease;
+        }
+
+        .zoom-btn:hover {
+            color: var(--accent-color);
+            background: rgba(var(--accent-color-rgb), 0.28);
+            border-color: var(--accent-color);
+            text-shadow: 0 0 14px var(--accent-color), 0 0 24px var(--accent-color);
+            transform: scale(1.15);
+            box-shadow: 0 0 18px var(--accent-color);
+        }
+
+        .zoom-btn:active {
+            transform: scale(0.92);
+            box-shadow: 0 0 10px var(--accent-color);
+        }
+        /* ────────────────────────────────────────────────────────────── */
+
         .h-splitter, .v-splitter {
             position: relative;
             z-index: 10;
@@ -692,7 +754,7 @@
                 <div class="left-group">
                     <div class="clock-and-date">
                         <div class="clock" id="clock">00:00:00 AM</div>
-                        <div class="date" id="date">Jan 08, 2026</div>
+                        <div class="date" id="date">Jan 09, 2026</div>
                     </div>
                     <div class="world-clock">
                         <span id="ny-time">NY: --:-- --</span>
@@ -722,6 +784,7 @@
                     <div class="reset-layout" id="reset-layout" title="Reset Layout">♻️</div>
                 </div>
             </div>
+
             <div class="quad-container">
                 <div class="column left-col">
                     <div class="pane top-row">
@@ -741,10 +804,17 @@
                                 <option value="clear">-- Clear Slot --</option>
                             </select>
                         </div>
-                        <div class="ip-needed-overlay" id="ip-needed1">
-                            <div class="ip-needed-text">IP address needed</div>
+                        <div class="pane-wrapper">
+                            <div class="zoom-controls">
+                                <div class="zoom-btn" data-action="in">+</div>
+                                <div class="zoom-btn" data-action="out">−</div>
+                            </div>
+                            <div class="ip-needed-overlay" id="ip-needed1">
+                                <div class="ip-needed-text">IP address needed</div>
+                            </div>
+                            <iframe class="zoomed-iframe" src="about:blank" id="iframe1"
+                                sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-top-navigation"></iframe>
                         </div>
-                        <iframe src="about:blank" id="iframe1" sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-top-navigation"></iframe>
                     </div>
                     <div class="h-splitter"></div>
                     <div class="pane bottom-row">
@@ -764,15 +834,24 @@
                                 <option value="clear">-- Clear Slot --</option>
                             </select>
                         </div>
-                        <div class="ip-needed-overlay" id="ip-needed2">
-                            <div class="ip-needed-text">IP address needed</div>
+                        <div class="pane-wrapper">
+                            <div class="zoom-controls">
+                                <div class="zoom-btn" data-action="in">+</div>
+                                <div class="zoom-btn" data-action="out">−</div>
+                            </div>
+                            <div class="ip-needed-overlay" id="ip-needed2">
+                                <div class="ip-needed-text">IP address needed</div>
+                            </div>
+                            <iframe class="zoomed-iframe" src="about:blank" id="iframe2"
+                                sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-top-navigation"></iframe>
                         </div>
-                        <iframe src="about:blank" id="iframe2" sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-top-navigation"></iframe>
                     </div>
                 </div>
+
                 <div class="v-splitter" id="v-splitter">
                     <div class="cross-handle" id="cross-handle"></div>
                 </div>
+
                 <div class="column right-col">
                     <div class="pane top-row">
                         <div class="miner-label">
@@ -791,10 +870,17 @@
                                 <option value="clear">-- Clear Slot --</option>
                             </select>
                         </div>
-                        <div class="ip-needed-overlay" id="ip-needed3">
-                            <div class="ip-needed-text">IP address needed</div>
+                        <div class="pane-wrapper">
+                            <div class="zoom-controls">
+                                <div class="zoom-btn" data-action="in">+</div>
+                                <div class="zoom-btn" data-action="out">−</div>
+                            </div>
+                            <div class="ip-needed-overlay" id="ip-needed3">
+                                <div class="ip-needed-text">IP address needed</div>
+                            </div>
+                            <iframe class="zoomed-iframe" src="about:blank" id="iframe3"
+                                sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-top-navigation"></iframe>
                         </div>
-                        <iframe src="about:blank" id="iframe3" sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-top-navigation"></iframe>
                     </div>
                     <div class="h-splitter"></div>
                     <div class="pane bottom-row">
@@ -814,10 +900,17 @@
                                 <option value="clear">-- Clear Slot --</option>
                             </select>
                         </div>
-                        <div class="ip-needed-overlay" id="ip-needed4">
-                            <div class="ip-needed-text">IP address needed</div>
+                        <div class="pane-wrapper">
+                            <div class="zoom-controls">
+                                <div class="zoom-btn" data-action="in">+</div>
+                                <div class="zoom-btn" data-action="out">−</div>
+                            </div>
+                            <div class="ip-needed-overlay" id="ip-needed4">
+                                <div class="ip-needed-text">IP address needed</div>
+                            </div>
+                            <iframe class="zoomed-iframe" src="about:blank" id="iframe4"
+                                sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-top-navigation"></iframe>
                         </div>
-                        <iframe src="about:blank" id="iframe4" sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-top-navigation"></iframe>
                     </div>
                 </div>
             </div>
@@ -911,13 +1004,28 @@
         const themeSelect = document.getElementById('theme-select');
         const savedColor = localStorage.getItem('selectedThemeColor') || '#64B5F6';
         document.documentElement.style.setProperty('--accent-color', savedColor);
+
+        let hex = savedColor.replace('#', '');
+        let r = parseInt(hex.substr(0,2),16);
+        let g = parseInt(hex.substr(2,2),16);
+        let b = parseInt(hex.substr(4,2),16);
+        document.documentElement.style.setProperty('--accent-color-rgb', `${r}, ${g}, ${b}`);
+
         document.documentElement.style.setProperty('--clock-color', savedColor);
         document.documentElement.style.setProperty('--world-clock-color', lightenColor(savedColor, 0.5));
         themeSelect.value = savedColor;
         themeSelect.style.color = savedColor;
+
         themeSelect.addEventListener('change', (e) => {
             const color = e.target.value;
             document.documentElement.style.setProperty('--accent-color', color);
+
+            hex = color.replace('#', '');
+            r = parseInt(hex.substr(0,2),16);
+            g = parseInt(hex.substr(2,2),16);
+            b = parseInt(hex.substr(4,2),16);
+            document.documentElement.style.setProperty('--accent-color-rgb', `${r}, ${g}, ${b}`);
+
             document.documentElement.style.setProperty('--clock-color', color);
             document.documentElement.style.setProperty('--world-clock-color', lightenColor(color, 0.5));
             themeSelect.style.color = color;
@@ -928,6 +1036,7 @@
             e.stopPropagation();
             for (let i = 0; i < 30; i++) createCoin();
         });
+
         function createCoin() {
             const coin = document.createElement('div');
             coin.classList.add('coin');
@@ -944,7 +1053,11 @@
 
         const version = document.getElementById('version');
         const popup = document.getElementById('version-popup');
-        version.addEventListener('click', (e) => { e.stopPropagation(); popup.style.display = 'block'; setTimeout(() => popup.style.display = 'none', 5000); });
+        version.addEventListener('click', (e) => {
+            e.stopPropagation();
+            popup.style.display = 'block';
+            setTimeout(() => popup.style.display = 'none', 5000);
+        });
         document.addEventListener('click', () => popup.style.display = 'none');
         popup.addEventListener('click', e => e.stopPropagation());
 
@@ -1037,6 +1150,7 @@
         const modalTitle = clearAllModal.querySelector('.warning-title');
         const modalText = clearAllModal.querySelector('.warning-text');
         const modalButtons = document.getElementById('clear-all-modal-buttons');
+
         clearAllBtn.addEventListener('click', e => {
             e.stopPropagation();
             clearAllModal.classList.remove('success');
@@ -1103,12 +1217,14 @@
             overlay.style.touchAction = 'none';
             return overlay;
         }
+
         function getClientPos(e) {
             if (e.touches && e.touches.length > 0) {
                 return { clientX: e.touches[0].clientX, clientY: e.touches[0].clientY };
             }
             return { clientX: e.clientX, clientY: e.clientY };
         }
+
         function startDrag(type, cursor) {
             return function(e) {
                 if (e.type.startsWith('touch')) e.preventDefault();
@@ -1124,6 +1240,7 @@
                 if (type === 'v' || type === 'cross') vSplitterEl.classList.add('splitter-glow');
             };
         }
+
         function stopDragging() {
             if (isDragging) {
                 isDragging = false;
@@ -1133,6 +1250,7 @@
                 document.querySelectorAll('.h-splitter, .v-splitter').forEach(s => s.classList.remove('splitter-glow'));
             }
         }
+
         function onMove(e) {
             if (!isDragging) return;
             if (e.type.startsWith('touch')) e.preventDefault();
@@ -1161,6 +1279,7 @@
         vSplitter.addEventListener('touchstart', startDrag('v', 'ew-resize'), { passive: false });
         crossHandle.addEventListener('mousedown', startDrag('cross', 'move'));
         crossHandle.addEventListener('touchstart', startDrag('cross', 'move'), { passive: false });
+
         document.addEventListener('mousemove', onMove);
         document.addEventListener('mouseup', stopDragging);
         document.addEventListener('mouseleave', stopDragging);
@@ -1183,7 +1302,6 @@
             const statusDot = document.getElementById('status' + pane);
             const ipNeededOverlay = document.getElementById('ip-needed' + pane);
 
-            // Populate saved slots
             for (let i = 1; i <= 6; i++) {
                 const saved = localStorage.getItem(`pane${pane}-slot${i}`);
                 if (saved) {
@@ -1192,7 +1310,6 @@
                 }
             }
 
-            // Restore current
             const current = localStorage.getItem(`pane${pane}-current`) || '';
             if (current) {
                 iframe.src = current;
@@ -1211,9 +1328,7 @@
                     statusDot.classList.remove('online');
                     return;
                 }
-
                 let isLikelySuccess = true;
-
                 try {
                     const bodyText = (iframe.contentWindow.document.body?.innerText || '').toLowerCase();
                     const keywords = ['gh/s', 'th/s', 'hashrate', 'temperature', 'uptime', 'bitaxe', 'shares', 'best diff'];
@@ -1227,7 +1342,6 @@
                         isLikelySuccess = false;
                     }
                 }
-
                 if (isLikelySuccess) {
                     statusDot.classList.add('online');
                     ipNeededOverlay.style.display = 'none';
@@ -1244,7 +1358,6 @@
 
             select.addEventListener('change', async function() {
                 const val = this.value;
-
                 if (val.startsWith('slot') && this.options[this.selectedIndex].textContent.includes('- Empty')) {
                     const slotNum = parseInt(val.replace('slot', ''));
                     const url = await showCustomPrompt(`Enter miner URL for Slot ${slotNum}:`, 'http://192.168.?.?');
@@ -1260,7 +1373,6 @@
                     ipNeededOverlay.style.display = 'none';
                     return;
                 }
-
                 if (val === 'overwrite') {
                     showSlotSelectorModal('Select slot to overwrite', async slotNum => {
                         if (!slotNum) { this.selectedIndex = 0; return; }
@@ -1273,21 +1385,18 @@
                         this.options[slotNum].textContent = `Slot ${slotNum}: ${clean}`;
                         iframe.src = clean;
                         localStorage.setItem(`pane${pane}-current`, clean);
-                        this.value = clean;  // <-- FIXED: now selects the updated slot
+                        this.value = clean;
                         ipNeededOverlay.style.display = 'none';
                     }, pane);
                     return;
                 }
-
                 if (val === 'clear') {
                     showSlotSelectorModal('Select slot to clear', slotNum => {
                         if (!slotNum) { this.selectedIndex = 0; return; }
-
                         const clearedUrl = localStorage.getItem(`pane${pane}-slot${slotNum}`);
                         localStorage.removeItem(`pane${pane}-slot${slotNum}`);
                         this.options[slotNum].value = `slot${slotNum}`;
                         this.options[slotNum].textContent = `Slot ${slotNum} - Empty`;
-
                         const currentUrl = localStorage.getItem(`pane${pane}-current`);
                         if (currentUrl === clearedUrl) {
                             iframe.src = 'about:blank';
@@ -1295,12 +1404,10 @@
                             ipNeededOverlay.style.display = 'flex';
                             statusDot.classList.remove('online');
                         }
-
                         this.selectedIndex = 0;
                     }, pane);
                     return;
                 }
-
                 if (val) {
                     iframe.src = val;
                     localStorage.setItem(`pane${pane}-current`, val);
@@ -1312,6 +1419,31 @@
                     statusDot.classList.remove('online');
                 }
             });
+        });
+
+        // ── ZOOM FUNCTIONALITY ──────────────────────────────────────────
+        document.querySelectorAll('.pane-wrapper').forEach(wrapper => {
+            const iframe = wrapper.querySelector('.zoomed-iframe');
+            let scale = 1;
+
+            function updateZoom(delta) {
+                scale = Math.max(0.4, Math.min(3.0, scale + delta));
+                iframe.style.transform = `scale(${scale})`;
+                iframe.style.width = `${100 / scale}%`;
+                iframe.style.height = `${100 / scale}%`;
+            }
+
+            wrapper.querySelectorAll('.zoom-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    updateZoom(btn.dataset.action === 'in' ? 0.15 : -0.15);
+                });
+            });
+
+            wrapper.addEventListener('wheel', e => {
+                e.preventDefault();
+                const delta = e.deltaY < 0 ? 0.12 : -0.12;
+                updateZoom(delta);
+            }, { passive: false });
         });
     </script>
 </body>
