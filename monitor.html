@@ -10,7 +10,6 @@
         :root {
             --accent-color-rgb: 100, 181, 246; /* fallback for blue */
         }
-
         body {
             margin: 0;
             padding: 0;
@@ -266,7 +265,6 @@
         #theme-select option[value="#32cd32"] { color: #32cd32; }
         #theme-select option[value="#ba55d3"] { color: #ba55d3; }
         #theme-select option[value="#00fa9a"] { color: #00fa9a; }
-
         #version-popup {
             display: none;
             position: fixed;
@@ -338,8 +336,6 @@
         .left-col .top-row { border-top-left-radius: 20px; border-top-right-radius: 0; }
         .right-col .top-row { border-top-left-radius: 0; border-top-right-radius: 20px; }
         .bottom-row { flex: 1 1 0%; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; }
-
-        /* ── ZOOM BUTTONS: SLIGHTLY LEFT + SUBTLE GLOW ON +/− ─────────── */
         .pane-wrapper {
             position: relative;
             width: 100%;
@@ -347,7 +343,6 @@
             overflow: hidden;
             border-radius: inherit;
         }
-
         .zoomed-iframe {
             position: absolute;
             top: 0;
@@ -359,11 +354,10 @@
             transition: transform 0.25s ease;
             will-change: transform;
         }
-
         .zoom-controls {
             position: absolute;
             top: 58px;
-            right: 16px;  /* ← Moved slightly left (from 8px → 16px) */
+            right: 16px;
             z-index: 6;
             display: flex;
             gap: 5px;
@@ -375,18 +369,16 @@
             opacity: 0.60;
             transition: all 0.3s ease;
         }
-
         .zoom-controls:hover {
             background: rgba(0,0,0,0.75);
             border: 1px solid var(--accent-color);
             box-shadow: 0 0 14px var(--accent-color);
             opacity: 1;
         }
-
         .zoom-btn {
             background: transparent;
             color: transparent;
-            text-shadow: 0 0 10px var(--accent-color), 0 0 16px var(--accent-color); /* soft glow on +/− */
+            text-shadow: 0 0 10px var(--accent-color), 0 0 16px var(--accent-color);
             border: 1px solid rgba(var(--accent-color-rgb), 0.35);
             border-radius: 4px;
             width: 24px;
@@ -400,7 +392,6 @@
             user-select: none;
             transition: all 0.2s ease;
         }
-
         .zoom-btn:hover {
             color: var(--accent-color);
             background: rgba(var(--accent-color-rgb), 0.28);
@@ -409,13 +400,10 @@
             transform: scale(1.15);
             box-shadow: 0 0 18px var(--accent-color);
         }
-
         .zoom-btn:active {
             transform: scale(0.92);
             box-shadow: 0 0 10px var(--accent-color);
         }
-        /* ────────────────────────────────────────────────────────────── */
-
         .h-splitter, .v-splitter {
             position: relative;
             z-index: 10;
@@ -779,12 +767,11 @@
                             <option value="#00fa9a">Spring Green</option>
                         </select>
                     </div>
-                    <div class="version" id="version">v1.4.4</div>
+                    <div class="version" id="version">v1.4.5</div>
                     <div class="clear-all" id="clear-all">Clear All</div>
                     <div class="reset-layout" id="reset-layout" title="Reset Layout">♻️</div>
                 </div>
             </div>
-
             <div class="quad-container">
                 <div class="column left-col">
                     <div class="pane top-row">
@@ -847,11 +834,9 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="v-splitter" id="v-splitter">
                     <div class="cross-handle" id="cross-handle"></div>
                 </div>
-
                 <div class="column right-col">
                     <div class="pane top-row">
                         <div class="miner-label">
@@ -916,7 +901,6 @@
             </div>
         </div>
     </div>
-
     <div id="custom-prompt">
         <div id="prompt-message">Enter miner URL:</div>
         <input type="text" id="prompt-input" value="http://192.168.?.?">
@@ -1004,28 +988,23 @@
         const themeSelect = document.getElementById('theme-select');
         const savedColor = localStorage.getItem('selectedThemeColor') || '#64B5F6';
         document.documentElement.style.setProperty('--accent-color', savedColor);
-
         let hex = savedColor.replace('#', '');
         let r = parseInt(hex.substr(0,2),16);
         let g = parseInt(hex.substr(2,2),16);
         let b = parseInt(hex.substr(4,2),16);
         document.documentElement.style.setProperty('--accent-color-rgb', `${r}, ${g}, ${b}`);
-
         document.documentElement.style.setProperty('--clock-color', savedColor);
         document.documentElement.style.setProperty('--world-clock-color', lightenColor(savedColor, 0.5));
         themeSelect.value = savedColor;
         themeSelect.style.color = savedColor;
-
         themeSelect.addEventListener('change', (e) => {
             const color = e.target.value;
             document.documentElement.style.setProperty('--accent-color', color);
-
             hex = color.replace('#', '');
             r = parseInt(hex.substr(0,2),16);
             g = parseInt(hex.substr(2,2),16);
             b = parseInt(hex.substr(4,2),16);
             document.documentElement.style.setProperty('--accent-color-rgb', `${r}, ${g}, ${b}`);
-
             document.documentElement.style.setProperty('--clock-color', color);
             document.documentElement.style.setProperty('--world-clock-color', lightenColor(color, 0.5));
             themeSelect.style.color = color;
@@ -1071,6 +1050,7 @@
         const slotSelect = document.getElementById('slot-selector-select');
         const slotOk = document.getElementById('slot-selector-ok');
         const slotCancel = document.getElementById('slot-selector-cancel');
+
         let currentResolve = null;
         let currentSlotCallback = null;
 
@@ -1182,6 +1162,10 @@
                 select.selectedIndex = 0;
                 statusDot.classList.remove('online');
                 overlay.style.display = 'flex';
+
+                // Clear zoom and scroll persistence
+                localStorage.removeItem(`pane${pane}-zoom`);
+                localStorage.removeItem(`pane${pane}-scroll`);
             }
             clearAllModal.classList.add('success');
             modalTitle.textContent = 'SUCCESS';
@@ -1295,7 +1279,97 @@
             });
         });
 
-        // === FINAL MINER LOGIC - OVERWRITE FIXED ===
+        // ── PERSISTENT ZOOM + SCROLL FOR EACH PANE ────────────────────────────────
+        document.querySelectorAll('.pane-wrapper').forEach((wrapper, index) => {
+            const iframe = wrapper.querySelector('.zoomed-iframe');
+            const paneNumber = index + 1; // 1,2,3,4
+
+            // Zoom persistence
+            let scale = 1;
+            const savedZoom = localStorage.getItem(`pane${paneNumber}-zoom`);
+            if (savedZoom) {
+                const parsed = parseFloat(savedZoom);
+                if (!isNaN(parsed) && parsed >= 0.4 && parsed <= 3.0) {
+                    scale = parsed;
+                }
+            }
+
+            function updateZoom(delta, save = false) {
+                scale = Math.max(0.4, Math.min(3.0, scale + delta));
+                iframe.style.transform = `scale(${scale})`;
+                iframe.style.width = `${100 / scale}%`;
+                iframe.style.height = `${100 / scale}%`;
+                if (save) {
+                    localStorage.setItem(`pane${paneNumber}-zoom`, scale.toFixed(4));
+                }
+            }
+
+            updateZoom(0); // Apply initial zoom
+
+            wrapper.querySelectorAll('.zoom-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const delta = btn.dataset.action === 'in' ? 0.15 : -0.15;
+                    updateZoom(delta, true);
+                });
+            });
+
+            wrapper.addEventListener('wheel', e => {
+                e.preventDefault();
+                const delta = e.deltaY < 0 ? 0.12 : -0.12;
+                updateZoom(delta, true);
+            }, { passive: false });
+
+            // Scroll persistence
+            function saveScrollPosition() {
+                try {
+                    const pos = {
+                        x: iframe.contentWindow.scrollX,
+                        y: iframe.contentWindow.scrollY
+                    };
+                    localStorage.setItem(`pane${paneNumber}-scroll`, JSON.stringify(pos));
+                } catch (e) {
+                    // Cross-origin or no content → silent fail
+                }
+            }
+
+            function restoreScrollPosition() {
+                const saved = localStorage.getItem(`pane${paneNumber}-scroll`);
+                if (!saved) return;
+                try {
+                    const { x, y } = JSON.parse(saved);
+                    setTimeout(() => {
+                        if (iframe.contentWindow && iframe.contentWindow.scrollTo) {
+                            iframe.contentWindow.scrollTo(x, y);
+                        }
+                    }, 400);
+                } catch (e) {}
+            }
+
+            // Attach scroll listener once content loads
+            iframe.addEventListener('load', () => {
+                try {
+                    const win = iframe.contentWindow;
+                    if (win && win.addEventListener) {
+                        win.addEventListener('scroll', saveScrollPosition);
+                        restoreScrollPosition();
+                    }
+                } catch (e) {
+                    // Cross-origin protection
+                }
+            });
+
+            // Try restore after zoom change (sometimes needed)
+            const originalUpdateZoom = updateZoom;
+            updateZoom = function(delta, save) {
+                originalUpdateZoom(delta, save);
+                setTimeout(restoreScrollPosition, 150);
+            };
+
+            // Initial restore attempt
+            setTimeout(restoreScrollPosition, 1000);
+        });
+        // ─────────────────────────────────────────────────────────────────────────
+
         document.querySelectorAll('.miner-select').forEach(select => {
             const pane = select.dataset.pane;
             const iframe = document.getElementById('iframe' + pane);
@@ -1419,31 +1493,6 @@
                     statusDot.classList.remove('online');
                 }
             });
-        });
-
-        // ── ZOOM FUNCTIONALITY ──────────────────────────────────────────
-        document.querySelectorAll('.pane-wrapper').forEach(wrapper => {
-            const iframe = wrapper.querySelector('.zoomed-iframe');
-            let scale = 1;
-
-            function updateZoom(delta) {
-                scale = Math.max(0.4, Math.min(3.0, scale + delta));
-                iframe.style.transform = `scale(${scale})`;
-                iframe.style.width = `${100 / scale}%`;
-                iframe.style.height = `${100 / scale}%`;
-            }
-
-            wrapper.querySelectorAll('.zoom-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    updateZoom(btn.dataset.action === 'in' ? 0.15 : -0.15);
-                });
-            });
-
-            wrapper.addEventListener('wheel', e => {
-                e.preventDefault();
-                const delta = e.deltaY < 0 ? 0.12 : -0.12;
-                updateZoom(delta);
-            }, { passive: false });
         });
     </script>
 </body>
